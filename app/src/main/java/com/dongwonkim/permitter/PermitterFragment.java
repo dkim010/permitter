@@ -21,6 +21,7 @@ public class PermitterFragment extends Fragment {
     private String[] mPermissions;
     private Messenger mMessenger;
 
+    // create instance (not fully initiated)
     static PermitterFragment create(String[] permissions, Handler handler){
         final PermitterFragment f = new PermitterFragment();
         final Bundle bundle = new Bundle();
@@ -40,7 +41,6 @@ public class PermitterFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.requestPermissions(mPermissions, 42);
         }
@@ -49,7 +49,6 @@ public class PermitterFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.i(TAG, "onRequestPermissionsResult");
         boolean ret = true;
         for (int i = 0; i < grantResults.length; i++) {
             if (grantResults[i] != PackageManager.PERMISSION_GRANTED){
@@ -58,12 +57,14 @@ public class PermitterFragment extends Fragment {
             }
         }
 
+        // send the result to the messenger
         if (ret) {
             send(0);
         } else {
             send(1);
         }
 
+        // close fragement
         getFragmentManager().beginTransaction().remove(this).commit();
     }
 

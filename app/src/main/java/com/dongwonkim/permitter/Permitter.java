@@ -26,7 +26,9 @@ public final class Permitter {
     public void execute(String[] permissions, Activity activity){
         boolean passed = true;
 
+        // check wheter we really need to request permissions (mashmallow)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // check whether already permissions are granted
             for (String p : permissions) {
                 if (activity.checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
                     passed = false;
@@ -34,17 +36,17 @@ public final class Permitter {
                 }
             }
         }
-
         if(passed){
             mOnGranted.onResult();
             return;
         }
 
-        // fragment version
+        // request permission through fragment
         final FragmentManager fm = activity.getFragmentManager();
         fm.beginTransaction().add(PermitterFragment.create(permissions, mHandler), PERMITTER_TAG).commit();
     }
 
+    // bridge between your activity and my fragment
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {

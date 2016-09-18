@@ -24,8 +24,8 @@ public class PermitterFragment extends Fragment {
     static PermitterFragment create(String[] permissions, Handler handler){
         final PermitterFragment f = new PermitterFragment();
         final Bundle bundle = new Bundle();
-        bundle.putStringArray(PermitterActivity.KEY_PERMISSIONS, permissions);
-        bundle.putParcelable(PermitterActivity.KEY_MESSENGER, new Messenger(handler));
+        bundle.putStringArray(PermitterFragment.KEY_PERMISSIONS, permissions);
+        bundle.putParcelable(PermitterFragment.KEY_MESSENGER, new Messenger(handler));
         f.setArguments(bundle);
         return f;
     }

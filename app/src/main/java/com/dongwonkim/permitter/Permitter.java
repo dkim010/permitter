@@ -15,10 +15,15 @@ public final class Permitter {
     private static final String TAG = "Permitter";
     private static final String PERMITTER_TAG = "permitter_tag";
 
-    private static OnPermissionResult mOnGranted;
-    private static OnPermissionResult mOnDenied;
+    private OnPermissionResult mOnGranted;
+    private OnPermissionResult mOnDenied;
 
-    public static void execute(String[] permissions, OnPermissionResult granted, OnPermissionResult denied, Activity activity){
+    public Permitter(OnPermissionResult granted, OnPermissionResult denied){
+        mOnGranted = granted;
+        mOnDenied = denied;
+    }
+
+    public void execute(String[] permissions, Activity activity){
         boolean passed = true;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -31,27 +36,16 @@ public final class Permitter {
         }
 
         if(passed){
-            granted.onResult();
+            mOnGranted.onResult();
             return;
         }
-
-        mOnGranted = granted;
-        mOnDenied = denied;
-
-        // activity version
-//        Intent i = new Intent(activity, PermitterActivity.class);
-//        final Bundle bundle = new Bundle();
-//        bundle.putStringArray(PermitterActivity.KEY_PERMISSIONS, permissions);
-//        bundle.putParcelable(PermitterActivity.KEY_MESSENGER, new Messenger(mHandler));
-//        i.putExtras(bundle);
-//        activity.startActivity(i);
 
         // fragment version
         final FragmentManager fm = activity.getFragmentManager();
         fm.beginTransaction().add(PermitterFragment.create(permissions, mHandler), PERMITTER_TAG).commit();
     }
 
-    private static Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

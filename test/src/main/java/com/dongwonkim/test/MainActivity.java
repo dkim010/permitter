@@ -45,17 +45,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Permitter.execute(DEFAULT_PERMISSIONS,
-                new OnPermissionResult() {
-                    @Override
-                    public void onResult() {
-                        Log.i("TEST", "granted");
-                    }
-                }, new OnPermissionResult(){
-                    @Override
-                    public void onResult() {
-                        Log.i("TEST", "denied");
-                    }
-                }, MainActivity.this);
+        new Permitter(new OnPermissionResult() {
+            @Override
+            public void onResult() {
+                Log.i("TEST", "granted");
+            }
+        }, new OnPermissionResult(){
+            @Override
+            public void onResult() {
+                Log.i("TEST", "denied");
+            }
+        }).execute(DEFAULT_PERMISSIONS, MainActivity.this);
     }
 }
